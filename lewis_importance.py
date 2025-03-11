@@ -176,7 +176,7 @@ def get_activation_norm(sparsity_ratio, model, tokenizer, dataset, device=torch.
 
         for name in tqdm.tqdm(subset):
             print(f"Getting activation norm for layer {i} name {name}")
-            print("Scaler Row shape = " , torch.sqrt(wrapped_layers[name].scaler_row.reshape((1,-1))).shape)
+            # print("Scaler Row shape = " , torch.sqrt(wrapped_layers[name].scaler_row.reshape((1,-1))).shape)
             W_metric = torch.abs(subset[name].weight.data) * torch.sqrt(wrapped_layers[name].scaler_row.reshape((1,-1)))
             W_metric_norm = torch.norm(W_metric)
 
@@ -376,7 +376,7 @@ def run_lewis(model_info, components, sparsity_ratio, nsamples, dataset):
             w_metric_pandas_concat, df, on='layer_name', how='outer'
         )
     df_final = post_process(w_metric_pandas_concat, components)
-    compute_deltas(df_final, components, base_model_type)
+    delta_dfs = compute_deltas(df_final, components, base_model_type)
     return delta_dfs
 
 def ensure_directory_exists(directory_path):
@@ -412,7 +412,7 @@ if __name__ == "__main__":
     # Run main processing
     delta_dfs = run_lewis(model_info, components, sparsity_ratio=sparsity_ratio, nsamples=nsamples, dataset=dataset)
     
-    delta_output_dir = f"{args.out_dir}/{os.path.splitext(args.config)[0]}_{dataset}_dataset"
+    delta_output_dir = f"{args.out_dir}"
     
     ensure_directory_exists(delta_output_dir)
 

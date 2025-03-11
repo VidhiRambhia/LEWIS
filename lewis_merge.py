@@ -23,7 +23,7 @@ def load_delta_dfs(output_directory):
 
     return delta_dfs
 
-def create_sparsity_values(df_delta, components, model_suffix, prefix_mapping, **kwargs):
+def create_sparsity_values(df_delta, components, model_suffix, prefix_mapping, gamma, epsilon):
     """
     Create a density values dictionary from the delta DataFrame.
 
@@ -41,9 +41,6 @@ def create_sparsity_values(df_delta, components, model_suffix, prefix_mapping, *
         dict: Dictionary of density values.
     """
     # Set default values for optional arguments
-    gamma = kwargs.get('gamma', 0.5)
-    epsilon = kwargs.get('epsilon', 0.8)
-
     density_values = {}
     for component in components:
         delta_col = f"{component}_delta_{model_suffix}"
@@ -148,7 +145,10 @@ def generate_merge_config(config_file, delta_dfs_in_dir, out_dir, gamma, epsilon
             density_values_dict[target_model_name] = density_values
         
         config = generate_config_helper(base_model_name, density_values_dict, global_parameters, merge_method, apply_lewis_to_weights)
-        output_filename = f"{out_dir}/{os.path.splitext(config_file)[0]}_{gamma}_{epsilon}_generated_{merge_method}_merge_config.yaml"
+        # Extract base name from config_file without directory
+        config_base_name = os.path.splitext(os.path.basename(config_file))[0]
+        output_filename = os.path.join(out_dir, f"{config_base_name}_{gamma}_{epsilon}_generated_{merge_method}_merge_config.yaml")
+        # output_filename = f"{out_dir}/{os.path.splitext(config_file)[0]}_{gamma}_{epsilon}_generated_{merge_method}_merge_config.yaml"
         with open(output_filename, 'w') as file:
             yaml.dump(config, file, sort_keys=False)
         print(f"The merge config file '{output_filename}' has been generated successfully.")

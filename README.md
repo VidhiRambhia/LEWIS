@@ -22,8 +22,7 @@ conda activate lewis
 ### **2. Install Dependencies**
 ```bash
 pip install -r requirements.txt
-git pull https://github.com/arcee-ai/mergekit.git
-pip install -e /path/to/mergekit
+pip install -e mergekit
 ```
 
 ### **3. Clone the Repository**
@@ -37,7 +36,7 @@ cd LEWIS
 ## **Usage**
 
 
-### **1. Getting LEWIS Importance Scores and storing them in a datafram**
+### **1. Getting LEWIS Importance Scores and storing them in a dataframe**
 ```bash
 mkdir -p "output/gemma_2b/delta_dfs"
 python3 lewis_importance.py \
@@ -62,7 +61,7 @@ python3 lewis_merge.py \
 mkdir -p "output/gemma_2b/merged_models"
 python3 utils/merger.py \
     --output_path "output/gemma_2b/merged_models" \
-    --merge_config "output/gemma_2b/merge_configs/gemma_2b_0.3_0.8_ties_generated_merge_config.yaml" \ #generated above
+    --merge_config "output/gemma_2b/merge_configs/gemma_2b_0.3_0.8_generated_ties_merge_config.yaml" \ #generated above
     --copy_tokenizer True \
     --lazy_unpickle False \
     --low_cpu_memory False \
